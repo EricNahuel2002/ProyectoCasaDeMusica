@@ -3,6 +3,7 @@ package ar.edu.unlam.pb2.dominio;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ public class Evento {
 	private LocalTime horaDeInicio;
 	private LocalTime horaDeFin;
 	private List<Concierto> conciertos;
+	private HashSet<ConciertoInstrumento> conciertosInstrumentos;
 
 	public Evento(String nombre, LocalDate dia, LocalTime horaDeInicio, LocalTime horaDeFin) {
 		this.nombre = nombre;
@@ -19,6 +21,7 @@ public class Evento {
 		this.horaDeInicio = horaDeInicio;
 		this.horaDeFin = horaDeFin;
 		this.conciertos = new ArrayList<>();
+		this.conciertosInstrumentos = new HashSet<>();
 	}
 
 	@Override
@@ -41,5 +44,43 @@ public class Evento {
 
 	public Boolean agregarConcierto(Concierto concierto) {
 		return conciertos.add(concierto);
+	}
+
+	public Boolean agregarConciertoInstrumento(ConciertoInstrumento ci) {
+		return conciertosInstrumentos.add(ci);
+	}
+
+	public List<Instrumento> obtenerLosInstrumentosDeUnConcierto(Concierto concierto) {
+		List<Instrumento> instrumentosAux = new ArrayList<>();
+		for(ConciertoInstrumento ci: conciertosInstrumentos) {
+			if(ci.getConcierto().equals(concierto)) {
+				instrumentosAux.add(ci.getInstrumento());
+			}
+		}
+		return instrumentosAux;
+	}
+
+	public List<Concierto> obtenerLosConciertosQueUsanUnInstrumento(Instrumento bateria) {
+		List<Concierto> conciertosAux = new ArrayList<>();
+		for(ConciertoInstrumento ci: conciertosInstrumentos) {
+			if(ci.getInstrumento().equals(bateria)) {
+				conciertosAux.add(ci.getConcierto());
+			}
+		}
+		return conciertosAux;
+	}
+
+	public List<Concierto> getConciertos() {
+		return conciertos;
+	}
+
+	public List<Concierto> obtenerLosConciertosDondeSeUtilizoUnInstrumentosGuitarra() {
+		List<Concierto> conciertosAux = new ArrayList<>();
+		for(ConciertoInstrumento ci: conciertosInstrumentos) {
+			if(ci.getInstrumento() instanceof GuitarraElectrica) {
+				conciertosAux.add(ci.getConcierto());
+			}
+		}
+		return conciertosAux;
 	}
 }

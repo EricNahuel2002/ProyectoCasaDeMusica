@@ -118,22 +118,6 @@ public class TestCasaDeMusica {
 		assertEquals(precioEsperado, instrumentoObtenido.getPrecioBase());
 	}
 
-	@Test
-	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosEstanOrdenados() {
-		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
-		casaDeMusica.agregarInstrumento(bateria);
-		Instrumento guitarraElectrica2 = this.crearGuitarraElectrica(1002, 6, "Azul", "Fender", "Stratocaster", 1994,
-				true, 10, 1000D);
-		casaDeMusica.agregarInstrumento(guitarraElectrica2);
-		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
-				true, 10, 1000D);
-		casaDeMusica.agregarInstrumento(guitarraElectrica);
-
-		TreeSet<Instrumento> instrumentosObtenidos = casaDeMusica.obtenerInstrumentosOrdenados();
-
-		assertEquals(guitarraElectrica, instrumentosObtenidos.first());
-		assertEquals(bateria, instrumentosObtenidos.last());
-	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaSePuedeAgregarUnEvento() {
@@ -157,48 +141,179 @@ public class TestCasaDeMusica {
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConEventosQueSePuedaObtenerUnEvento() {
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
 		
+		Evento eventoObtenido = casaDeMusica.buscarEvento(evento);
+		
+		assertEquals(evento,eventoObtenido);
 	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConUnEventoYUnConciertoSePuedeAgregarVariosInstrumentosAUnConcierto() {
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
+		Concierto concierto = new Concierto(16,"Taylor Swift");
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		Boolean instrumentoAgregadoAlConcierto = casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, guitarraElectrica);
+		
+		assertTrue(instrumentoAgregadoAlConcierto);
 	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConUnEventoYUnConciertoSePuedenObtenerLosInstrumentosDeUnConcierto() {
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
+		Concierto concierto = new Concierto(16,"Taylor Swift");
+		Concierto concierto2 = new Concierto(17,"Red Hot Chili Peppers");
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		casaDeMusica.agregarInstrumento(guitarraElectrica);
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		casaDeMusica.agregarInstrumento(bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, guitarraElectrica);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto2, bateria);
+		
+		List<Instrumento> instrumentosDeUnConcierto = casaDeMusica.obtenerLosInstrumentosDeUnConciertoParaUnEvento(evento, concierto);
+		
+		assertEquals(2,instrumentosDeUnConcierto.size());
 	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConUnEventoYVariosConciertosConInstrumentosSePuedenObtenerLosConciertosDondeSeUtilizoUnInstrumento() {
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
+		Concierto concierto = new Concierto(16,"Taylor Swift");
+		Concierto concierto2 = new Concierto(17,"Red Hot Chili Peppers");
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		casaDeMusica.agregarInstrumento(guitarraElectrica);
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		casaDeMusica.agregarInstrumento(bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, guitarraElectrica);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto2, bateria);
+		
+		List<Concierto> conciertosQueUsanUnInstrumento = casaDeMusica.obtenerLosConciertosQueUsanUnInstrumento(evento,bateria);
+				
+		assertEquals(2, conciertosQueUsanUnInstrumento.size());
 	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConUnEventoYVariosConciertosConInstrumentosNoSePuedeAgregarUnConciertoInstrumentoExistente() {
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
+		Concierto concierto = new Concierto(16,"Taylor Swift");
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		casaDeMusica.agregarInstrumento(bateria);
+		Boolean conciertoInstrumentoAgregadoAEvento = casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, bateria);
+		Boolean conciertoInstrumentoAgregadoAEvento2 = casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, bateria);
+		
+		assertTrue(conciertoInstrumentoAgregadoAEvento);
+		assertFalse(conciertoInstrumentoAgregadoAEvento2);
 	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConMuchosEventosYVariosConciertosEnCadaEventoSePuedenObtenerLosEventosDondeSeDioUnConcierto() {
-
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
+		Evento evento2 = new Evento("Viña del mar", LocalDate.of(2024, 6, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento2);
+		Evento evento3 = new Evento("Bla", LocalDate.of(2024, 9, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento3);
+		Concierto concierto = new Concierto(16,"Taylor Swift");
+		Concierto concierto2 = new Concierto(15,"Ed Sheeran");
+		casaDeMusica.agregarConciertoAEvento(evento, concierto);
+		casaDeMusica.agregarConciertoAEvento(evento2, concierto);
+		casaDeMusica.agregarConciertoAEvento(evento3, concierto2);
+		
+		List<Evento> eventosObtenidos = casaDeMusica.obtenerEventosDondeSeDioUnConcierto(concierto);
+		
+		assertEquals(2, eventosObtenidos.size());
 	}
 
 	@Test
 	public void dadoQueExisteUnaCasaDeMusicaConUnEventoYVariosConciertosConInstrumentosSePuedenObtenerLosConciertosDondeSeUtilizoUnInstrumentosGuitarra() {
-
+		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
+		casaDeMusica.agregarEvento(evento);
+		Concierto concierto = new Concierto(16,"Taylor Swift");
+		Concierto concierto2 = new Concierto(17,"Red Hot Chili Peppers");
+		Concierto concierto3 = new Concierto(19,"Eminem");
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		casaDeMusica.agregarInstrumento(guitarraElectrica);
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		casaDeMusica.agregarInstrumento(bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, guitarraElectrica);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto, bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto2, bateria);
+		casaDeMusica.agregarConciertoInstrumentoAEvento(evento, concierto3, guitarraElectrica);
+		
+		List<Concierto> conciertosObtenidos = casaDeMusica.obtenerLosConciertosDondeSeUtilizoUnInstrumentosGuitarra(evento);
+		
+		assertEquals(2,conciertosObtenidos.size());
 	}
+	
+//	@Test
+//	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosEstanOrdenados() {
+//		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+//		
+//		Instrumento guitarraElectrica2 = this.crearGuitarraElectrica(1002, 6, "Azul", "Fender", "Stratocaster", 1994,
+//				true, 10, 1000D);
+//		
+//		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+//				true, 10, 1000D);
+//		casaDeMusica.agregarInstrumento(guitarraElectrica);
+//		casaDeMusica.agregarInstrumento(guitarraElectrica2);
+//		casaDeMusica.agregarInstrumento(bateria);
+//
+//		TreeSet<Instrumento> instrumentosObtenidos = casaDeMusica.obtenerInstrumentosOrdenados();
+//
+//		assertEquals(guitarraElectrica, instrumentosObtenidos.first());
+//		assertEquals(bateria, instrumentosObtenidos.last());
+//	}
 
 	@Test
 	public void queSePuedaObtenerUnaListaOrdenadaDeInstrumentosPorCodigo() {
-
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		Instrumento guitarraElectrica2 = this.crearGuitarraElectrica(1002, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		
+		casaDeMusica.agregarInstrumento(guitarraElectrica);
+		casaDeMusica.agregarInstrumento(guitarraElectrica2);
+		casaDeMusica.agregarInstrumento(bateria);
+		
+		TreeSet<Instrumento> instrumentosOrdenadosPorCodigo = casaDeMusica.obtenerUnaListaOrdenadaDeInstrumentosPorCodigo();
+		
+		assertEquals(guitarraElectrica, instrumentosOrdenadosPorCodigo.first());
+		assertEquals(bateria, instrumentosOrdenadosPorCodigo.last());
 	}
 
-	@Test
-	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosPorOrdenNatural() {
-
-	}
+//	@Test
+//	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosPorOrdenNatural() {
+//		
+//	}
 
 	@Test
 	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosPorOrdenEspecifico() {
-
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		Instrumento guitarraElectrica2 = this.crearGuitarraElectrica(1002, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		
+		casaDeMusica.agregarInstrumento(guitarraElectrica);
+		casaDeMusica.agregarInstrumento(guitarraElectrica2);
+		casaDeMusica.agregarInstrumento(bateria);
+		
+		TreeSet<Instrumento> instrumentosOrdenadosPorCodigo = casaDeMusica.obtenerUnaListaOrdenadaDeInstrumentosPorOrdenEspecifico(new OrdenMayorAMenor());
+		
+		assertEquals(bateria, instrumentosOrdenadosPorCodigo.first());
+		assertEquals(guitarraElectrica, instrumentosOrdenadosPorCodigo.last());
 	}
 
 	private Instrumento crearBateria(int codigo, int cantidadTambores, int cantidadPlatillos, String color,
