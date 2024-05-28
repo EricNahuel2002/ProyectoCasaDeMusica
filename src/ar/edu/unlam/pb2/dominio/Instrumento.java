@@ -52,6 +52,12 @@ public abstract class Instrumento implements Comparable<Instrumento>{
 	}
 
 	public abstract String emitirSonido();
+	
+	@Override
+	public int compareTo(Instrumento o) {
+//		De Menor a Mayor
+		return this.codigo.compareTo(o.getCodigo());
+	}
 
 	@Override
 	public int hashCode() {
@@ -72,9 +78,6 @@ public abstract class Instrumento implements Comparable<Instrumento>{
 
 
 
-	@Override
-	public int compareTo(Instrumento o) {
-		return this.codigo.compareTo(o.getCodigo());
-	}
+	
 
 }

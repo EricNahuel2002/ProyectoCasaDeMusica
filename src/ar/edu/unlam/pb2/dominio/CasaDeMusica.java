@@ -1,6 +1,8 @@
 package ar.edu.unlam.pb2.dominio;
 import ar.edu.unlam.pb2.dominio.*;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -47,7 +49,7 @@ public class CasaDeMusica implements ICasaDeMusica{
 		return eventoEncontrado.agregarConcierto(concierto);
 	}
 
-	private Evento buscarEvento(Evento evento) {
+	public Evento buscarEvento(Evento evento) {
 		for(Evento e: eventos) {
 			if(e.equals(evento)) {
 				return e;
@@ -64,14 +66,18 @@ public class CasaDeMusica implements ICasaDeMusica{
 
 	@Override
 	public Boolean agregarConciertoInstrumentoAEvento(Evento evento, Concierto concierto, Instrumento instrumento) {
-		// TODO Auto-generated method stub
+		for(Evento e: eventos) {
+			if(e.equals(evento)) {
+				return e.agregarConciertoInstrumento(new ConciertoInstrumento(concierto,instrumento));
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public List<Instrumento> obtenerLosInstrumentosDeUnConciertoParaUnEvento(Evento evento, Concierto concierto) {
-		// TODO Auto-generated method stub
-		return null;
+		Evento eventoEncontrado = this.buscarEvento(evento);
+		return eventoEncontrado.obtenerLosInstrumentosDeUnConcierto(concierto);
 	}
 
 	public List<Instrumento> obtenerGuitarras() {
@@ -88,4 +94,36 @@ public class CasaDeMusica implements ICasaDeMusica{
 		return instrumentos;
 	}
 
+	public List<Concierto> obtenerLosConciertosQueUsanUnInstrumento(Evento evento, Instrumento bateria) {
+		Evento eventoEncontrado = this.buscarEvento(evento);
+		return eventoEncontrado.obtenerLosConciertosQueUsanUnInstrumento(bateria);
+	}
+
+	public List<Evento> obtenerEventosDondeSeDioUnConcierto(Concierto concierto) {
+		List<Evento> eventosAux = new ArrayList<>();
+		for(Evento e: eventos) {
+			for(Concierto c: e.getConciertos()) {
+				if(c.equals(concierto)) {
+					eventosAux.add(e);
+				}
+			}
+		}
+		return eventosAux;
+	}
+
+	public List<Concierto> obtenerLosConciertosDondeSeUtilizoUnInstrumentosGuitarra(Evento evento) {
+		Evento eventoEncontrado = this.buscarEvento(evento);
+		return eventoEncontrado.obtenerLosConciertosDondeSeUtilizoUnInstrumentosGuitarra();
+	}
+
+	public TreeSet<Instrumento> obtenerUnaListaOrdenadaDeInstrumentosPorCodigo() {
+		return instrumentos;
+	}
+
+	public TreeSet<Instrumento> obtenerUnaListaOrdenadaDeInstrumentosPorOrdenEspecifico(
+			Comparator<Instrumento> ordenEspecifico) {
+		TreeSet<Instrumento> instrumentosAux = new TreeSet<Instrumento>(ordenEspecifico);
+		instrumentosAux.addAll(instrumentos);
+		return instrumentosAux;
+	}
 }
