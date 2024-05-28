@@ -8,6 +8,11 @@ public class Bateria extends Instrumento {
 		super(codigo, color, marca, stock, modelo, anioFabricacion, precioBase);
 	}
 
+	@Override
+	public String emitirSonido() {
+		return "Pushh";
+	}
+
 	
 
 }
