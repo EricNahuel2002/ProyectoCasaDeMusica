@@ -23,24 +23,33 @@ public class CasaDeMusica implements ICasaDeMusica{
 	}
 
 	@Override
-	public Instrumento buscarInstrumentoPorCodigo(Integer codigo) {
+	public Instrumento buscarInstrumentoPorCodigo(Integer codigo) throws InstrumentoNoEncontradoException {
 		for(Instrumento i : instrumentos) {
 			if(i.getCodigo().equals(codigo)) {
 				return i;
 			}
 		}
-		return null;
+		throw new InstrumentoNoEncontradoException();
 	}
 
 	@Override
-	public Double obtenerPrecioInstrumento(Integer codigo) {
-		// TODO Auto-generated method stub
-		return null;
+	public Double obtenerPrecioInstrumento(Integer codigo) throws InstrumentoNoEncontradoException {
+		Instrumento instrumento = this.buscarInstrumentoPorCodigo(codigo);
+		return instrumento.getPrecioBase();
 	}
 
 	@Override
-	public Boolean agregarEvento(Evento evento) {
+	public Boolean agregarEvento(Evento evento) throws Validacion1Exception,Validacion2Exception {
+		validacion1();
+		validacion2();
 		return eventos.add(evento);
+	}
+
+	private void validacion1() throws Validacion1Exception {
+		throw new Validacion1Exception();
+	}
+	private void validacion2() throws Validacion2Exception {
+		throw new Validacion2Exception();
 	}
 
 	@Override

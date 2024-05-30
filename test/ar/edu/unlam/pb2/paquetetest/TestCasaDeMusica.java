@@ -87,14 +87,12 @@ public class TestCasaDeMusica {
 		assertEquals(bateria, instrumentoObtenido);
 	}
 
-	@Test
-	public void dadoQueExistenInstrumentosEnLaCasaDeMusicaAlBuscarUnInstrumentoPorCodigoInexistenteObtengoNull() {
+	@Test (expected = InstrumentoNoEncontradoException.class)
+	public void dadoQueExistenInstrumentosEnLaCasaDeMusicaAlBuscarUnInstrumentoPorCodigoInexistenteObtengoNull() throws InstrumentoNoEncontradoException {
 		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
 		casaDeMusica.agregarInstrumento(bateria);
 
 		Instrumento instrumentoObtenido = casaDeMusica.buscarInstrumentoPorCodigo(15);
-
-		assertTrue(instrumentoObtenido == null);
 	}
 
 	@Test
@@ -129,7 +127,7 @@ public class TestCasaDeMusica {
 	}
 
 	@Test
-	public void dadoQueExisteUnaCasaDeMusicaConUnEventoSePuedeAgregarVariosConciertos() {
+	public void dadoQueExisteUnaCasaDeMusicaConUnEventoSePuedeAgregarVariosConciertos() throws Validacion1Exception, Validacion2Exception {
 		Evento evento = new Evento("LolaPalooza", LocalDate.of(2024, 5, 16), LocalTime.of(18, 0), LocalTime.of(20, 0));
 		casaDeMusica.agregarEvento(evento);
 		Concierto concierto = new Concierto(16,"Taylor Swift");
@@ -256,24 +254,24 @@ public class TestCasaDeMusica {
 		assertEquals(2,conciertosObtenidos.size());
 	}
 	
-//	@Test
-//	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosEstanOrdenados() {
-//		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
-//		
-//		Instrumento guitarraElectrica2 = this.crearGuitarraElectrica(1002, 6, "Azul", "Fender", "Stratocaster", 1994,
-//				true, 10, 1000D);
-//		
-//		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
-//				true, 10, 1000D);
-//		casaDeMusica.agregarInstrumento(guitarraElectrica);
-//		casaDeMusica.agregarInstrumento(guitarraElectrica2);
-//		casaDeMusica.agregarInstrumento(bateria);
-//
-//		TreeSet<Instrumento> instrumentosObtenidos = casaDeMusica.obtenerInstrumentosOrdenados();
-//
-//		assertEquals(guitarraElectrica, instrumentosObtenidos.first());
-//		assertEquals(bateria, instrumentosObtenidos.last());
-//	}
+	@Test
+	public void dadoQueExistenInstumentosEnLaCasaDeMusicaAlObtenerlosEstanOrdenados() {
+		Instrumento bateria = this.crearBateria(2001, 1, 4, "Dorada", "Jazz", "Un modelo", 2000, 20, 2000D);
+		
+		Instrumento guitarraElectrica2 = this.crearGuitarraElectrica(1002, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		
+		Instrumento guitarraElectrica = this.crearGuitarraElectrica(1001, 6, "Azul", "Fender", "Stratocaster", 1994,
+				true, 10, 1000D);
+		casaDeMusica.agregarInstrumento(guitarraElectrica);
+		casaDeMusica.agregarInstrumento(guitarraElectrica2);
+		casaDeMusica.agregarInstrumento(bateria);
+
+		TreeSet<Instrumento> instrumentosObtenidos = casaDeMusica.obtenerInstrumentosOrdenados();
+
+		assertEquals(guitarraElectrica, instrumentosObtenidos.first());
+		assertEquals(bateria, instrumentosObtenidos.last());
+	}
 
 	@Test
 	public void queSePuedaObtenerUnaListaOrdenadaDeInstrumentosPorCodigo() {
@@ -314,6 +312,37 @@ public class TestCasaDeMusica {
 		
 		assertEquals(bateria, instrumentosOrdenadosPorCodigo.first());
 		assertEquals(guitarraElectrica, instrumentosOrdenadosPorCodigo.last());
+	}
+	
+	@Test
+	public void dividirDosNumeros() throws DividirPorCeroException{
+		Double resultado = dividir(10.0,0.0);
+			assertEquals(3.33,resultado,0.01);
+
+		
+	}
+	
+//	a.metodo() llama a b.metodo() y b.metodo() llama a c.metodo()
+//														termina con excepcion
+//					relanza excepcion
+//	recibe la excepcion
+//	relanza
+	
+	
+//	a.metodo() llama a b.metodo() y b.metodo() llama a c.metodo()
+//														termina con excepcion
+//						captura y maneja la excepcion
+	
+	@Test (expected = DividirPorCeroException.class)
+	public void siAlIntentardividirUnNumeroPorCeroSeTieneQueProducirUnaExcepcion() throws DividirPorCeroException {
+		Double resultado = dividir(10.0,3.0);
+	}
+	
+	public Double dividir(Double numerador,Double denominador) throws DividirPorCeroException{
+		if(!denominador.equals(0.0))
+		return numerador / denominador;
+		else 
+			throw new DividirPorCeroException("No es posible dividir por cero");
 	}
 
 	private Instrumento crearBateria(int codigo, int cantidadTambores, int cantidadPlatillos, String color,

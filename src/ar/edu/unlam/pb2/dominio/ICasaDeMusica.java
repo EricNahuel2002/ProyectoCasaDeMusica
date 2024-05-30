@@ -5,9 +5,9 @@ import java.util.List;
 public interface ICasaDeMusica {
 	
 	Boolean agregarInstrumento(Instrumento instrumento);
-	Instrumento buscarInstrumentoPorCodigo(Integer codigo);
-	Double obtenerPrecioInstrumento(Integer codigo);
-	Boolean agregarEvento(Evento evento);
+	Instrumento buscarInstrumentoPorCodigo(Integer codigo) throws InstrumentoNoEncontradoException;
+	Double obtenerPrecioInstrumento(Integer codigo) throws InstrumentoNoEncontradoException;
+	Boolean agregarEvento(Evento evento) throws Validacion1Exception, Validacion2Exception;
 	/**
 	 * Agrega un concierto a un evento
 	 * */
